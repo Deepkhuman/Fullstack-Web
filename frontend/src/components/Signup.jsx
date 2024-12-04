@@ -2,20 +2,33 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import axiosClient from "../Axios/axiosClient";
+import { handleerror, handlesuccess } from "../../utils";
+import axios from "axios";
 
 const Signup = () => {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
+    const { firstname, lastname, email, company, password } = data;
+    if (!firstname || !lastname || !email || !company || !password) {
+      return handleerror("All Fields Are Required!!");
+    }
     try {
+      console.log(data);
       const response = await axiosClient.post("/signup", data);
       localStorage.setItem("token", response.token);
-      alert("Signup successful!");
-      navigate("/");
+
+      console.log(response);
+      if (response.success) {
+        handlesuccess("Signup Successfull!!");
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
+      }
     } catch (error) {
-      console.error(error);
-      alert("Signup failed!");
+      console.error(error.response.status);
+      handleerror(error?.response?.data.message);
     }
   };
 
