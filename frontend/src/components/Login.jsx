@@ -2,14 +2,19 @@ import * as React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axiosClient from "../Axios/axiosClient";
-import { toast } from "react-toastify";
+import { handleError, handleSuccess } from "../../utils";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+import { loginschema } from "../utils/yupValidation";
 
 const Login = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    resolver: yupResolver(loginschema),
+  });
 
   const navigate = useNavigate();
 
@@ -21,11 +26,11 @@ const Login = () => {
       localStorage.setItem("loggedinUSer", response.name);
       navigate("/dashboard");
     } catch (error) {
-      console.error("---------------->", error);
-      toast.error(error.response.data.message, {
-        position: "top-right",
-        autoClose: 1000,
-      });
+      console.log(error.status);
+      if (error.status === 401) {
+        return handleError("Invalid username or password");
+      }
+      handleError(error?.response?.data?.error?.details[0].message);
     }
   };
 
@@ -48,6 +53,9 @@ const Login = () => {
               {...register("email")}
               className="w-full px-3 py-2 border rounded-lg"
             />
+            {errors.email && (
+              <span className="text-red-500">{errors?.email?.message}</span>
+            )}
           </div>
           <div className="mb-4">
             <label className="block text-gray-700">Password</label>
@@ -58,6 +66,11 @@ const Login = () => {
                 {...register("password")}
                 className="w-full px-3 py-2 border rounded-lg"
               />
+              {errors?.password && (
+                <span className="text-red-500">
+                  {errors?.password?.message}
+                </span>
+              )}
             </div>
           </div>
           <div className="flex items-center justify-between mb-6">

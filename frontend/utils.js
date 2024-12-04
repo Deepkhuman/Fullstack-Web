@@ -1,17 +1,17 @@
 import { toast } from "react-toastify";
 
-const handlesuccess = (msg) => {
+const handleSuccess = (msg) => {
   toast.success(msg, {
     position: "top-right",
     autoClose: 1000,
   });
 };
 
-const handleerror = (msg) => {
+const handleError = (msg) => {
   toast.error(msg, {
     position: "top-right",
     autoClose: 1000,
   });
 };
 
-export { handlesuccess, handleerror };
+export { handleSuccess, handleError };

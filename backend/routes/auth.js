@@ -1,4 +1,5 @@
 const { getuser, postdata, login } = require("../controllers/authUser");
+const { ensureAuthenticated } = require("../middlewares/Auth");
 const {
   loginValidation,
   signupValidation,
@@ -6,7 +7,7 @@ const {
 
 const router = require("express").Router();
 
-router.get("/", getuser);
+router.get("/", ensureAuthenticated, getuser);
 router.post("/signup", signupValidation, postdata);
 router.post("/login", loginValidation, login);
 

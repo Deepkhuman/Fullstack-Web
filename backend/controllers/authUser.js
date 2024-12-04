@@ -4,8 +4,12 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 async function getuser(req, res) {
-  const data = await Usermodel.find({});
-  res.send(data);
+  try {
+    const User = await Usermodel.find({});
+    res.send(User);
+  } catch (error) {
+    console.error("_____.....>", first);
+  }
 }
 
 async function login(req, res) {
@@ -15,7 +19,7 @@ async function login(req, res) {
     const user = await Usermodel.findOne({ email });
     if (!user) {
       return res
-        .status(404)
+        .status(401)
         .json({ message: "User  not found", success: false });
     }
 

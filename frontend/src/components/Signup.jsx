@@ -2,18 +2,21 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import axiosClient from "../Axios/axiosClient";
-import { handleerror, handlesuccess } from "../../utils";
-import axios from "axios";
+import { handleError, handleSuccess } from "../../utils";
 
 const Signup = () => {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
-    const { firstname, lastname, email, company, password } = data;
-    if (!firstname || !lastname || !email || !company || !password) {
-      return handleerror("All Fields Are Required!!");
-    }
+    const {
+      register,
+      handleSubmit,
+      formState: { errors },
+    } = useForm({
+      resolver: yupResolver(loginschema),
+    });
+
     try {
       console.log(data);
       const response = await axiosClient.post("/signup", data);
@@ -21,14 +24,14 @@ const Signup = () => {
 
       console.log(response);
       if (response.success) {
-        handlesuccess("Signup Successfull!!");
+        handleSuccess("Signup Successfull!!");
         setTimeout(() => {
           navigate("/login");
         }, 1000);
       }
     } catch (error) {
       console.error(error.response.status);
-      handleerror(error?.response?.data.message);
+      handleError(error?.response?.data.message);
     }
   };
 
