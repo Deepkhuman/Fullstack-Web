@@ -3,20 +3,21 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import axiosClient from "../Axios/axiosClient";
 import { handleError, handleSuccess } from "../../utils";
+import { signupschema } from "../utils/yupValidation";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const Signup = () => {
-  const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
 
-  const onSubmit = async (data) => {
-    const {
-      register,
-      handleSubmit,
-      formState: { errors },
-    } = useForm({
-      resolver: yupResolver(loginschema),
-    });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(signupschema),
+  });
 
+  const onSubmit = async (data) => {
     try {
       console.log(data);
       const response = await axiosClient.post("/signup", data);
@@ -56,6 +57,11 @@ const Signup = () => {
                 {...register("firstname")}
                 className="w-full px-3 py-2 border rounded-lg"
               />
+              {errors.firstname && (
+                <span className="text-red-500">
+                  {errors?.firstname?.message}
+                </span>
+              )}
             </div>
 
             <div className="w-1/2">
@@ -67,6 +73,11 @@ const Signup = () => {
                 {...register("lastname")}
                 className="w-full px-3 py-2 border rounded-lg"
               />
+              {errors.lastname && (
+                <span className="text-red-500">
+                  {errors?.lastname?.message}
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -81,6 +92,9 @@ const Signup = () => {
               className="w-full px-3 py-2 border rounded-lg"
             />
           </div>
+          {errors.company && (
+            <span className="text-red-500">{errors?.company?.message}</span>
+          )}
         </div>
 
         <div className="mb-4">
@@ -92,6 +106,9 @@ const Signup = () => {
               placeholder="Demo@company.com"
               className="w-full px-3 py-2 border rounded-lg"
             />
+            {errors.email && (
+              <span className="text-red-500">{errors?.email?.message}</span>
+            )}
           </div>
         </div>
 
@@ -104,6 +121,9 @@ const Signup = () => {
               {...register("password")}
               className="w-full px-3 py-2 border rounded-lg"
             />
+            {errors.password && (
+              <span className="text-red-500">{errors?.password?.message}</span>
+            )}
           </div>
         </div>
 

@@ -2,7 +2,7 @@ import * as React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axiosClient from "../Axios/axiosClient";
-import { handleError, handleSuccess } from "../../utils";
+import { handleError } from "../../utils";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { loginschema } from "../utils/yupValidation";

@@ -1,18 +1,18 @@
-import { Box, Card } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
-import { useFormState } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { Card } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import axiosClient from "../Axios/axiosClient";
-import { handleError } from "../../utils";
+import { handleError, handleSuccess } from "../../utils";
+import Sidebar from "../../Mui Components/Sidebar";
 
 const Home = () => {
   const [loggedinuser, setloggedinUser] = useState("");
   const navigate = useNavigate();
+  const [toastShow, SetToastshow] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const user = localStorage.getItem("loggedinUser");
+    const user = localStorage.getItem("loggedinUSer");
 
     if (!token) {
       navigate("/login");
@@ -20,6 +20,10 @@ const Home = () => {
     } else {
       setloggedinUser(user);
       verifyToken(token);
+      // if (!toastShow) {
+      //   SetToastshow(true);
+      //   handleSuccess("LoggedIn Success");
+      // }
     }
   }, [navigate]);
 
@@ -30,11 +34,10 @@ const Home = () => {
           authorization: `Bearer ${token}`,
         },
       });
-      console.log("==============>", response);
     } catch (error) {
       handleError("Invalid session. Please log in again.");
       localStorage.removeItem("token");
-      localStorage.removeItem("loggedinUser");
+      localStorage.removeItem("loggedinUSer");
       navigate("/login");
     }
   }
@@ -51,13 +54,14 @@ const Home = () => {
 
   return (
     <>
-      <div className="container">
-        <div className="w-52 h-full ">
-          <Card sx={{ minWidth: 275 }}>{loggedinuser}</Card>
-          <button className="bg-red-400 p-3 " onClick={handlelogout}>
-            Logout
-          </button>
-        </div>
+      <div>
+        <Sidebar
+          button={
+            <button className="bg-red-400 p-3 " onClick={handlelogout}>
+              Logout
+            </button>
+          }
+        />
       </div>
     </>
   );
